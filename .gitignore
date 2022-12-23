@@ -1,2 +1,5 @@
 dinosoar/__pycache__
+dinofacts/__pycache__
+dinofacts/templatetags/__pycache__
+dinofacts/migrations
 db.sqlite3
