@@ -1,6 +1,6 @@
 from django import template
 from django.template.defaultfilters import stringfilter
-from django.utils.html import conditional_escape, mark_safe
+from django.utils.html import conditional_escape, mark_safe, escape
 
 register = template.Library()
 
@@ -29,7 +29,7 @@ def other_letters(iterable, num):
 @stringfilter
 def letter_count(value, letter, autoescape=True):
 
-    if autoescape:
+    if (autoescape):
         value = conditional_escape(value)
     
     result = (
@@ -38,3 +38,30 @@ def letter_count(value, letter, autoescape=True):
     )
     
     return mark_safe(result)
+
+@register.simple_tag
+def mute(*args):
+    return ""
+
+@register.simple_tag
+def make_ul(iterable):
+    content = ["<ul>"]
+    for item in iterable:
+        content.append(f"<li>{escape(item)}</li>")
+
+    content.append("</ul>")
+    content = "".join(content)
+    return mark_safe(content)
+
+@register.simple_tag(takes_context=True)
+def dino_list(context, title):
+    output = [f"<h2>{title}</h2><ul>"]
+    for dino in context["dinosaurs"]:
+        output.append(f"<li>{escape(dino)}</li>")
+    output.append("</ul>")
+    output = "".join(output)
+    
+    context["weight"] = "20 tons"
+    return mark_safe(output)
+
+
